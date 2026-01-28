@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Dorn {
@@ -17,6 +19,7 @@ public class Dorn {
     public static void receiveInputAndPrint(){
         String line;
         Scanner in = new Scanner(System.in);
+        List<String> inputs = new ArrayList<>();
 
         while(true) {
             line = in.nextLine();
@@ -27,9 +30,19 @@ public class Dorn {
                 System.out.println("\t____________________________________________________________");
                 break;
             }
-            System.out.println("\t____________________________________________________________");
-            System.out.println("\t"+ line);
-            System.out.println("\t____________________________________________________________");
+            if(line.equals("list")){
+                System.out.println("\t____________________________________________________________");
+                for(int i = 0; i < inputs.toArray().length; i++){
+                    System.out.println("\t"+ i +". " + inputs.get(i));
+                }
+                System.out.println("\t____________________________________________________________");
+            }
+            else {
+                inputs.add(line); // store the input dynamically
+                System.out.println("\t____________________________________________________________");
+                System.out.println("\t" + line);
+                System.out.println("\t____________________________________________________________");
+            }
         }
 
         in.close(); // close scanner
