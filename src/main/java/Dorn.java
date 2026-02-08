@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Dorn {
     public static void initalisation(){
         String logo = " ____   ___  ____  _   _ \n"
@@ -24,40 +23,44 @@ public class Dorn {
 
         while (true) {
             line = in.nextLine();
-            String[] parts = line.split(" ");
-            String command = parts[0];
 
-            switch(command) {
-                case "bye":
-                    OutputHandler.printBye();
-                    return;
-                case "list":
-                    OutputHandler.printTaskList(tasks);
-                    break;
-                case "mark":
-                    int markIndex = Integer.parseInt(parts[1]) - 1;
-                    tasks.get(markIndex).markDone();
-                    OutputHandler.printMark(tasks.get(markIndex));
-                    break;
-                case "unmark":
-                    int unmarkIndex = Integer.parseInt(parts[1]) - 1;
-                    tasks.get(unmarkIndex).markUndone();
-                    OutputHandler.printUnmark(tasks.get(unmarkIndex));
-                    break;
-                case "todo":
-                    tasks.add(new ToDos(parser.parseDescription(parts)));
-                    OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    break;
-                case "deadline":
-                    tasks.add(new Deadlines(parser.parseDescription(parts), parser.endDate(parts)));
-                    OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    break;
-                case "event":
-                    tasks.add(new Events(parser.parseDescription(parts), parser.startDate(parts), parser.endDate(parts)));
-                    OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    break;
-                default:
-                    break;
+            if (line.trim().isEmpty()) {
+                continue;
+            }
+
+            String[] parts = line.split(" ");
+            String command = parts[0].toLowerCase();
+            try {
+                switch (command) {
+                    case "bye":
+                        OutputHandler.printBye();
+                        return;
+                    case "list":
+                        OutputHandler.printTaskList(tasks);
+                        break;
+                    case "mark":
+                        CommandHandler.handleMark(parts, tasks);
+                        break;
+                    case "unmark":
+                        CommandHandler.handleUnmark(parts, tasks);
+                        break;
+                    case "todo":
+                        CommandHandler.handleTodo(parts, tasks);
+                        break;
+                    case "deadline":
+                        CommandHandler.handleDeadline(parts, tasks);
+                        break;
+                    case "event":
+                        CommandHandler.handleEvent(parts, tasks);
+                        break;
+                    default:
+                        OutputHandler.printError("I'm sorry, but I don't know what that means :-(");
+                        break;
+                }
+            } catch(DornException e){
+                OutputHandler.printError(e.getMessage());
+            } catch(Exception e){
+                OutputHandler.printError("An unexpected error has occured");
             }
         }
     }

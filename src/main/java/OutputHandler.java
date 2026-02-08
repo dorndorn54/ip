@@ -40,5 +40,11 @@ public class OutputHandler {
         System.out.println("\tNow you have " + number + " tasks in the list");
         System.out.println("\t____________________________________________________________");
     }
+
+    public static void printError(String errorMessage){
+        System.out.println("\t____________________________________________________________");
+        System.out.println("\t" + errorMessage);
+        System.out.println("\t____________________________________________________________");
+    }
 }
 
