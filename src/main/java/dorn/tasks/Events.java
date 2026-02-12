@@ -1,4 +1,6 @@
-public class Events extends Task{
+package dorn.tasks;
+
+public class Events extends Task {
     private String startDate;
     private String endDate;
 

@@ -1,3 +1,5 @@
+package dorn.parser;
+
 public class parser {
 
     public static String parseDescription(String[] parts){

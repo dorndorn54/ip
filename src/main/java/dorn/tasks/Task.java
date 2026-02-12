@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+package dorn.tasks;
 
-class Task {
+public class Task {
     private String description;
     private boolean isDone;
 

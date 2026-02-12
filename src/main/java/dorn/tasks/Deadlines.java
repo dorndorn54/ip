@@ -1,4 +1,6 @@
-public class Deadlines extends Task{
+package dorn.tasks;
+
+public class Deadlines extends Task {
 
     private String dueDate;
 

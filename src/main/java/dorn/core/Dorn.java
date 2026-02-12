@@ -1,3 +1,9 @@
+package dorn.core;
+
+import dorn.tasks.Task;
+import dorn.parser.OutputHandler;
+import dorn.parser.CommandHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
