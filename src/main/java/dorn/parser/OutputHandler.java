@@ -35,11 +35,11 @@ public class OutputHandler {
         System.out.println("\t____________________________________________________________");
     }
 
-    public static void printAdded(Task task, int number){
+    public static void printAdded(Task task, int numberOfTask){
         System.out.println("\t____________________________________________________________");
         System.out.println("\tGot it. I've added this task:");
         System.out.println("\t   " + task);
-        System.out.println("\tNow you have " + number + " dorn.core.tasks in the list");
+        System.out.println("\tNow you have " + numberOfTask + " tasks in the list");
         System.out.println("\t____________________________________________________________");
     }
 
@@ -48,5 +48,14 @@ public class OutputHandler {
         System.out.println("\t" + errorMessage);
         System.out.println("\t____________________________________________________________");
     }
+
+    public static void printDelete(Task task, int numberOfTask){
+        System.out.println("\t____________________________________________________________");
+        System.out.println("\tNoted. I've removed this task:");
+        System.out.println("\t   " + task);
+        System.out.println("\tNow you have "+ numberOfTask + " tasks in the list.");
+        System.out.println("\t____________________________________________________________");
+    }
+
 }
 

@@ -36,6 +36,7 @@ public class Dorn {
 
             String[] parts = line.split(" ");
             String command = parts[0].toLowerCase();
+
             try {
                 switch (command) {
                     case "bye":
@@ -58,6 +59,9 @@ public class Dorn {
                         break;
                     case "event":
                         CommandHandler.handleEvent(parts, tasks);
+                        break;
+                    case "delete":
+                        CommandHandler.handleDelete(parts, tasks);
                         break;
                     default:
                         OutputHandler.printError("I'm sorry, but I don't know what that means :-(");

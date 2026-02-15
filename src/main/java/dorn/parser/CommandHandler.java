@@ -22,6 +22,7 @@ public class CommandHandler {
             }
 
             tasks.get(markIndex).markDone();
+            OutputHandler.printMark(tasks.get(markIndex));
         } catch(NumberFormatException e){
             throw new DornException("Please input a valid task number");
         }
@@ -130,5 +131,21 @@ public class CommandHandler {
 
         tasks.add(new Events(description, startDate, endDate));
         OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
+    }
+
+    public static void handleDelete(String[] parts, List<Task> tasks) throws  DornException{
+        if(parts.length < 2){
+            throw new DornException("The delete command must be followed by the task number");
+        }
+
+        try{
+            int indexToDelete = Integer.parseInt(parts[1]) - 1;
+
+            OutputHandler.printDelete(tasks.get(indexToDelete), tasks.size() - 1); //number of tasks left so subtract 1
+            tasks.remove(indexToDelete);
+
+        } catch(NumberFormatException e){
+            throw new DornException("Please provide a valid task number.");
+        }
     }
 }
