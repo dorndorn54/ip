@@ -14,7 +14,7 @@ public class OutputHandler {
 
     public static void printTaskList(List<Task> tasks){
         System.out.println("\t____________________________________________________________");
-        System.out.println("\t Here are the dorn.core.tasks in your list:");
+        System.out.println("\t Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("\t " + (i + 1) + "." + tasks.get(i));
         }
@@ -39,7 +39,7 @@ public class OutputHandler {
         System.out.println("\t____________________________________________________________");
         System.out.println("\tGot it. I've added this task:");
         System.out.println("\t   " + task);
-        System.out.println("\tNow you have " + number + " dorn.core.tasks in the list");
+        System.out.println("\tNow you have " + number + " tasks in the list");
         System.out.println("\t____________________________________________________________");
     }
 

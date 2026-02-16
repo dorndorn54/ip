@@ -9,6 +9,38 @@ import dorn.tasks.ToDos;
 import java.util.List;
 
 public class CommandHandler {
+    public static void identifyCommand(String[] parts, List<Task> tasks) throws DornException {
+        String command = parts[0].toLowerCase();
+
+        switch (command) {
+            case "bye":
+                OutputHandler.printBye();
+                System.exit(0);
+            case "list":
+                OutputHandler.printTaskList(tasks);
+                break;
+            case "mark":
+                CommandHandler.handleMark(parts, tasks);
+                break;
+            case "unmark":
+                CommandHandler.handleUnmark(parts, tasks);
+                break;
+            case "todo":
+                CommandHandler.handleTodo(parts, tasks);
+                break;
+            case "deadline":
+                CommandHandler.handleDeadline(parts, tasks);
+                break;
+            case "event":
+                CommandHandler.handleEvent(parts, tasks);
+                break;
+            default:
+                OutputHandler.printError("I'm sorry, but I don't know what that means :-(");
+                break;
+        }
+
+    }
+
     public static void handleMark(String[] parts, List<Task> tasks) throws DornException {
         if(parts.length < 2){
             throw new DornException("please specify which task to mark");
@@ -22,6 +54,7 @@ public class CommandHandler {
             }
 
             tasks.get(markIndex).markDone();
+            OutputHandler.printMark(tasks.get(markIndex));
         } catch(NumberFormatException e){
             throw new DornException("Please input a valid task number");
         }
