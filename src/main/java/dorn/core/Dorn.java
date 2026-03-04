@@ -23,6 +23,16 @@ public class Dorn {
                 "\nWhat can I do for you?" +
                 "\n\n" + logo + "\n");
     }
+    /**
+     * Continuously reads user input from standard input and processes commands.
+     * Loads the saved task list on startup, then enters an infinite loop reading
+     * one line at a time. Blank lines are ignored. Each non-empty line is split
+     * into tokens and passed to {@link #identifyCommand} for dispatch.
+     *
+     * <p>Handles {@link DornException} for expected application errors and
+     * {@link Exception} for any other unexpected errors, printing an error
+     * message via {@link OutputHandler#printError} in both cases.</p>
+     */
 
     public static void receiveInputAndPrint() {
         Scanner in = new Scanner(System.in);
@@ -48,9 +58,15 @@ public class Dorn {
         }
     }
 
+    /**
+     * Entry point for the Dorn application.
+     * Calls {@link #initalisation()} to display the welcome screen, then
+     * delegates to {@link #receiveInputAndPrint()} to begin the input loop.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         initalisation();
-
         receiveInputAndPrint();
     }
 }

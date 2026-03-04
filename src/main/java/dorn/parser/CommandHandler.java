@@ -12,7 +12,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles parsing and execution of all user commands for the Dorn chatbot.
+ * Dispatches commands to the appropriate handler methods and updates the task list accordingly.
+ */
 public class CommandHandler {
+
+    /**
+     * Identifies and dispatches the user's command to the appropriate handler.
+     * Recognized commands: {@code bye}, {@code list}, {@code mark}, {@code unmark},
+     * {@code todo}, {@code deadline}, {@code event}, {@code delete}, {@code find}.
+     *
+     * @param parts the tokenized user input, where {@code parts[0]} is the command
+     * @param tasks the current list of tasks to operate on
+     * @throws DornException if the command arguments are invalid
+     * @throws IOException   if saving the task list on {@code bye} fails
+     */
     public static void identifyCommand(String[] parts, List<Task> tasks) throws DornException, IOException {
         String command = parts[0].toLowerCase();
 
@@ -52,6 +67,14 @@ public class CommandHandler {
 
     }
 
+    /**
+     * Searches for tasks whose descriptions contain the given keyword (case-insensitive).
+     * Prints matching tasks, or an error message if none are found.
+     *
+     * @param parts the tokenized input; {@code parts[1]} is the keyword to search for
+     * @param tasks the current list of tasks to search through
+     * @throws DornException if no keyword is provided
+     */
     public static void handleFind(String[] parts, List<Task> tasks) throws DornException{
         if (parts.length < 2) {
             throw new DornException("Please specify a keyword to search for");
@@ -73,6 +96,15 @@ public class CommandHandler {
         }
 
     }
+
+    /**
+     * Marks the specified task as done.
+     *
+     * @param parts the tokenized input; {@code parts[1]} is the 1-based task number
+     * @param tasks the current list of tasks
+     * @throws DornException if no task number is provided, the number is out of range,
+     *                       or the input is not a valid integer
+     */
     public static void handleMark(String[] parts, List<Task> tasks) throws DornException {
         if(parts.length < 2){
             throw new DornException("please specify which task to mark");
@@ -92,6 +124,14 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Marks the specified task as not done.
+     *
+     * @param parts the tokenized input; {@code parts[1]} is the 1-based task number
+     * @param tasks the current list of tasks
+     * @throws DornException if no task number is provided, the number is out of range,
+     *                       or the input is not a valid integer
+     */
     public static void handleUnmark(String[] parts, List<Task> tasks) throws DornException{
         if(parts.length < 2){
             throw new DornException("Please specify which task to unmark");
@@ -111,6 +151,13 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Creates and adds a new {@link ToDos} task to the task list.
+     *
+     * @param parts the tokenized input; tokens after {@code parts[0]} form the description
+     * @param tasks the current list of tasks
+     * @throws DornException if the description is missing or empty
+     */
     public static void handleTodo(String[] parts, List<Task> tasks) throws DornException {
         if (parts.length < 2) {
             throw new DornException("The description of a todo cannot be empty.");
@@ -125,6 +172,14 @@ public class CommandHandler {
         OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
     }
 
+    /**
+     * Creates and adds a new {@link Deadlines} task to the task list.
+     * Expects a description followed by {@code /by <date>}.
+     *
+     * @param parts the tokenized input containing the description and {@code /by} date
+     * @param tasks the current list of tasks
+     * @throws DornException if the description or {@code /by} date is missing or empty
+     */
     public static void handleDeadline(String[] parts, List<Task> tasks) throws DornException{
         if(parts.length < 2){
             throw new DornException("The description of a deadline cannot be empty");
@@ -159,6 +214,14 @@ public class CommandHandler {
         OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
     }
 
+    /**
+     * Creates and adds a new {@link Events} task to the task list.
+     * Expects a description followed by {@code /from <date>} and {@code /to <date>}.
+     *
+     * @param parts the tokenized input containing the description, {@code /from}, and {@code /to} dates
+     * @param tasks the current list of tasks
+     * @throws DornException if the description, start date, or end date is missing or empty
+     */
     public static void handleEvent(String[] parts, List<Task> tasks) throws DornException{
         if (parts.length < 2) {
             throw new DornException("The description of an event cannot be empty.");
@@ -197,6 +260,13 @@ public class CommandHandler {
         OutputHandler.printAdded(tasks.get(tasks.size() - 1), tasks.size());
     }
 
+    /**
+     * Deletes the specified task from the task list.
+     *
+     * @param parts the tokenized input; {@code parts[1]} is the 1-based task number to delete
+     * @param tasks the current list of tasks
+     * @throws DornException if no task number is provided or the input is not a valid integer
+     */
     public static void handleDelete(String[] parts, List<Task> tasks) throws  DornException{
         if(parts.length < 2){
             throw new DornException("The delete command must be followed by the task number");

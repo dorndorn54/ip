@@ -17,9 +17,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles persistent storage of tasks by serializing and deserializing
+ * the task list to and from a JSON file on disk.
+ */
 public class StorageSystem {
     private static final String FILE_PATH = "Data/tasks.json";
 
+    /**
+     * Serializes the given list of tasks to a JSON file at {@value FILE_PATH}.
+     * Creates the {@code Data/} directory if it does not already exist.
+     * Uses a custom {@link LocalDateAdapter} to handle {@link LocalDate} serialization.
+     *
+     * @param tasks the list of tasks to save
+     * @throws IOException if an I/O error occurs while writing the file
+     */
     public static void saveList(List<Task> tasks) throws IOException {
         File dataDir = new File("Data");
         if(!dataDir.exists()){
@@ -39,6 +51,13 @@ public class StorageSystem {
         }
     }
 
+    /**
+     * Deserializes the task list from the JSON file at {@value FILE_PATH}.
+     * Returns an empty list if the file does not exist or cannot be read,
+     * or if the file contains a null/empty JSON array.
+     *
+     * @return the loaded list of tasks, or an empty list if unavailable
+     */
     public static ArrayList<Task> loadList(){
         Gson gson = new Gson();
         File file = new File(FILE_PATH);
