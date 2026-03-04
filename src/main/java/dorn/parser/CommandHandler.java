@@ -9,6 +9,7 @@ import dorn.tasks.ToDos;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler {
@@ -41,6 +42,9 @@ public class CommandHandler {
             case "delete":
                 CommandHandler.handleDelete(parts, tasks);
                 break;
+            case "find":
+                CommandHandler.handleFind(parts, tasks);
+                break;
             default:
                 OutputHandler.printError("I'm sorry, but I don't know what that means :-(");
                 break;
@@ -48,6 +52,27 @@ public class CommandHandler {
 
     }
 
+    public static void handleFind(String[] parts, List<Task> tasks) throws DornException{
+        if (parts.length < 2) {
+            throw new DornException("Please specify a keyword to search for");
+        }
+
+        String keyword = parts[1].toLowerCase();
+        List<Task> matchingTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if(matchingTasks.isEmpty()){
+            OutputHandler.printError("No tasks found containing keyword: " + keyword);
+        } else {
+            OutputHandler.printSimilarTasks(matchingTasks);
+        }
+
+    }
     public static void handleMark(String[] parts, List<Task> tasks) throws DornException {
         if(parts.length < 2){
             throw new DornException("please specify which task to mark");

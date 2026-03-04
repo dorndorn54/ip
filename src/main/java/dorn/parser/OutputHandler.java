@@ -6,6 +6,15 @@ import java.util.List;
 
 public class OutputHandler {
 
+    public static void printSimilarTasks(List<Task> matchingTasks){
+        System.out.println("\t____________________________________________________________");
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println("\t" + (i + 1) + "." + matchingTasks.get(i));
+        }
+        System.out.println("\t____________________________________________________________");
+    }
+
     public static void printBye(){
         System.out.println("\t____________________________________________________________");
         System.out.println("\tBye. Hope to see you again soon!");
