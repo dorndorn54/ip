@@ -3,6 +3,10 @@ package dorn.tasks;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task with a specific due date.
+ * Displayed with a {@code [D]} prefix and the due date formatted as {@code MMM d yyyy}.
+ */
 public class Deadlines extends Task {
 
     private LocalDate dueDate;

@@ -4,6 +4,10 @@ import dorn.tasks.Task;
 
 import java.util.List;
 
+/**
+ * Handles all formatted output to the standard output stream for the Dorn chatbot.
+ * Each method prints a decorated, bordered message to the console.
+ */
 public class OutputHandler {
 
     public static void printSimilarTasks(List<Task> matchingTasks){
@@ -65,6 +69,5 @@ public class OutputHandler {
         System.out.println("\tNow you have "+ numberOfTask + " tasks in the list.");
         System.out.println("\t____________________________________________________________");
     }
-
 }
 

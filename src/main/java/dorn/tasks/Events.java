@@ -3,6 +3,10 @@ package dorn.tasks;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a task that spans a specific date range.
+ * Displayed with an {@code [E]} prefix and the start/end dates formatted as {@code MMM d yyyy}.
+ */
 public class Events extends Task {
     private LocalDate startDate;
     private LocalDate endDate;

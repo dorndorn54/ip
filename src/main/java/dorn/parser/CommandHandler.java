@@ -163,7 +163,7 @@ public class CommandHandler {
             throw new DornException("The description of a todo cannot be empty.");
         }
 
-        String description = parser.parseDescription(parts);
+        String description = Parser.parseDescription(parts);
         if (description.isEmpty()) {
             throw new DornException("The description of a todo cannot be empty.");
         }
@@ -198,8 +198,8 @@ public class CommandHandler {
             throw new DornException("Please specify the deadline with /by");
         }
 
-        String description = parser.parseDescription(parts);
-        LocalDate endDate = parser.endDate(parts);
+        String description = Parser.parseDescription(parts);
+        LocalDate endDate = Parser.endDate(parts);
 
         //checking for empty inputs
         if(description.isEmpty()){
@@ -240,9 +240,9 @@ public class CommandHandler {
             throw new DornException("Please specify event duration with /from and /to.");
         }
 
-        String description = parser.parseDescription(parts);
-        LocalDate startDate = parser.startDate(parts);
-        LocalDate endDate = parser.endDate(parts);
+        String description = Parser.parseDescription(parts);
+        LocalDate startDate = Parser.startDate(parts);
+        LocalDate endDate = Parser.endDate(parts);
 
         if (description.isEmpty()) {
             throw new DornException("The description of an event cannot be empty.");

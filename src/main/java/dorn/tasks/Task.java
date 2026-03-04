@@ -1,5 +1,10 @@
 package dorn.tasks;
 
+/**
+ * Represents a generic task with a description and completion status.
+ * Serves as the base class for specific task types such as
+ * {@link ToDos}, {@link Deadlines}, and {@link Events}.
+ */
 public class Task {
     private String description;
     private boolean isDone;
