@@ -1,17 +1,21 @@
 package dorn.tasks;
 
-public class Events extends Task {
-    private String startDate;
-    private String endDate;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-    public Events(String description, String startDate, String endDate){
+public class Events extends Task {
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    public Events(String description, LocalDate startDate, LocalDate endDate){
         super(description);
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     public String formatDate(){
-        return " (from: " + startDate + " to: " + endDate + ")";
+        return " (from: " + startDate.format(DateTimeFormatter.ofPattern("MMM d yyyy"))
+                + " to: " + endDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ")";
     }
 
     @Override

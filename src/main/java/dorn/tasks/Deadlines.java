@@ -1,16 +1,19 @@
 package dorn.tasks;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Deadlines extends Task {
 
-    private String dueDate;
+    private LocalDate dueDate;
 
-    public Deadlines(String description, String dueDate){
+    public Deadlines(String description, LocalDate dueDate){
         super(description);
         this.dueDate = dueDate;
     }
 
     public String formatDate(){
-        return " (by: " + this.dueDate + ")";
+        return " (by: " + dueDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ")";
     }
 
     @Override

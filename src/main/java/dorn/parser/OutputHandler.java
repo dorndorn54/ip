@@ -14,7 +14,7 @@ public class OutputHandler {
 
     public static void printTaskList(List<Task> tasks){
         System.out.println("\t____________________________________________________________");
-        System.out.println("\t Here are the dorn.core.tasks in your list:");
+        System.out.println("\t Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("\t " + (i + 1) + "." + tasks.get(i));
         }

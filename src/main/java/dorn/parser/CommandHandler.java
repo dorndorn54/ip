@@ -1,19 +1,23 @@
 package dorn.parser;
 
 import dorn.core.DornException;
+import dorn.core.StorageSystem;
 import dorn.tasks.Deadlines;
 import dorn.tasks.Events;
 import dorn.tasks.Task;
 import dorn.tasks.ToDos;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class CommandHandler {
-    public static void identifyCommand(String[] parts, List<Task> tasks) throws DornException {
+    public static void identifyCommand(String[] parts, List<Task> tasks) throws DornException, IOException {
         String command = parts[0].toLowerCase();
 
         switch (command) {
             case "bye":
+                StorageSystem.saveList(tasks);
                 OutputHandler.printBye();
                 System.exit(0);
             case "list":
@@ -33,6 +37,9 @@ public class CommandHandler {
                 break;
             case "event":
                 CommandHandler.handleEvent(parts, tasks);
+                break;
+            case "delete":
+                CommandHandler.handleDelete(parts, tasks);
                 break;
             default:
                 OutputHandler.printError("I'm sorry, but I don't know what that means :-(");
@@ -112,13 +119,13 @@ public class CommandHandler {
         }
 
         String description = parser.parseDescription(parts);
-        String endDate = parser.endDate(parts);
+        LocalDate endDate = parser.endDate(parts);
 
         //checking for empty inputs
         if(description.isEmpty()){
             throw new DornException("The description of a deadline cannot be empty");
         }
-        if(endDate.isEmpty() || endDate.equals("Invalid input format")){
+        if(endDate == null){
             throw new DornException("The deadline date cannot be empty");
         }
 
@@ -146,18 +153,18 @@ public class CommandHandler {
         }
 
         String description = parser.parseDescription(parts);
-        String startDate = parser.startDate(parts);
-        String endDate = parser.endDate(parts);
+        LocalDate startDate = parser.startDate(parts);
+        LocalDate endDate = parser.endDate(parts);
 
         if (description.isEmpty()) {
             throw new DornException("The description of an event cannot be empty.");
         }
 
-        if (startDate.equals("Invalid input format") || startDate.isEmpty()) {
+        if (startDate == null) {
             throw new DornException("The event start date cannot be empty.");
         }
 
-        if (endDate.equals("Invalid input format") || endDate.isEmpty()) {
+        if (endDate == null) {
             throw new DornException("The event end date cannot be empty.");
         }
 

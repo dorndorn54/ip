@@ -1,5 +1,8 @@
 package dorn.core;
+import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import dorn.tasks.Task;
 
 import com.google.gson.Gson;
@@ -10,6 +13,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +26,13 @@ public class StorageSystem {
             dataDir.mkdirs();
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try(FileWriter writer = new FileWriter(FILE_PATH)){  // ✅ Use the constant!
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .create();
+
+
+        try(FileWriter writer = new FileWriter(FILE_PATH)){
             gson.toJson(tasks, writer);
         } catch (IOException e){
             System.out.println("Error saving: " + e.getMessage());
@@ -47,3 +56,4 @@ public class StorageSystem {
         }
     }
 }
+

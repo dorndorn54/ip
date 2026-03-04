@@ -1,5 +1,9 @@
 package dorn.parser;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 public class parser {
 
     public static String parseDescription(String[] parts){
@@ -14,7 +18,7 @@ public class parser {
         return sb.toString().trim();
     }
 
-    public static String startDate(String[] parts){
+    public static LocalDate startDate(String[] parts){
         int fromIndex = -1;
         int toIndex = -1;
 
@@ -32,13 +36,14 @@ public class parser {
             for (int i = fromIndex + 1; i < toIndex; i++) {
                 startDate.append(parts[i]).append(" ");
             }
-            return startDate.toString().trim();
+
+            return LocalDate.parse(startDate.toString().trim());
         } else {
-            return "Invalid input format";
+            return null;
         }
     }
 
-    public static String endDate(String[] parts){
+    public static LocalDate endDate(String[] parts){
         //locate either the /to or the /by position
 
         int fromIndex = -1;
@@ -55,9 +60,10 @@ public class parser {
             for(int i = fromIndex + 1; i < parts.length; i++){
                 endDate.append(parts[i]).append(" ");
             }
-            return endDate.toString().trim();
+
+            return LocalDate.parse(endDate.toString().trim());
         }else{
-            return "Invalid input format";
+            return null;
         }
     }
 }

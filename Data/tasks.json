@@ -1,13 +1,10 @@
 [
   {
-    "description": "r1",
+    "description": "return shovel",
     "isDone": false
   },
   {
-    "description": "r2",
-    "isDone": false
-  },
-  {
+    "dueDate": "2019-10-05",
     "description": "return book",
     "isDone": false
   }
