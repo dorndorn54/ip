@@ -14,7 +14,7 @@ Dorn is a simple command-line task manager that helps you track todos, deadlines
 
 ## Quick Start
 
-1. Ensure you have **Java 11** or later installed.
+1. Ensure you have **Java 17**  installed.
 2. Download the latest `dorn.jar` from the releases page.
 3. Run the application:
    ```
