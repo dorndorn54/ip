@@ -9,6 +9,7 @@ import dorn.tasks.ToDos;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class CommandHandler {
     /**
      * Identifies and dispatches the user's command to the appropriate handler.
      * Recognized commands: {@code bye}, {@code list}, {@code mark}, {@code unmark},
-     * {@code todo}, {@code deadline}, {@code event}, {@code delete}, {@code find}.
+     * {@code todo}, {@code deadline}, {@code event}, {@code delete}, {@code find}, {@code help}.
      *
      * @param parts the tokenized user input, where {@code parts[0]} is the command
      * @param tasks the current list of tasks to operate on
@@ -60,6 +61,9 @@ public class CommandHandler {
             case "find":
                 CommandHandler.handleFind(parts, tasks);
                 break;
+            case "help":
+                OutputHandler.printHelp();
+                break;
             default:
                 OutputHandler.printError("I'm sorry, but I don't know what that means :-(");
                 break;
@@ -68,19 +72,28 @@ public class CommandHandler {
     }
 
     /**
-     * Searches for tasks whose descriptions contain the given keyword (case-insensitive).
-     * Prints matching tasks, or an error message if none are found.
+     * Searches for tasks whose descriptions contain the given query string (case-insensitive).
+     * The query may consist of multiple words; all tokens after the command are joined as
+     * a single search phrase. Prints matching tasks, or an error message if none are found.
      *
-     * @param parts the tokenized input; {@code parts[1]} is the keyword to search for
+     * @param parts the tokenized input; tokens from {@code parts[1]} onward form the search query
      * @param tasks the current list of tasks to search through
      * @throws DornException if no keyword is provided
      */
-    public static void handleFind(String[] parts, List<Task> tasks) throws DornException{
+    public static void handleFind(String[] parts, List<Task> tasks) throws DornException {
         if (parts.length < 2) {
-            throw new DornException("Please specify a keyword to search for");
+            throw new DornException("Please specify a keyword to search for.");
         }
 
-        String keyword = parts[1].toLowerCase();
+        // Join all tokens after the command to support multi-word searches
+        StringBuilder queryBuilder = new StringBuilder();
+        for (int i = 1; i < parts.length; i++) {
+            queryBuilder.append(parts[i]);
+            if (i < parts.length - 1) {
+                queryBuilder.append(" ");
+            }
+        }
+        String keyword = queryBuilder.toString().toLowerCase();
         List<Task> matchingTasks = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -113,8 +126,8 @@ public class CommandHandler {
         try{
             int markIndex = Integer.parseInt(parts[1]) - 1;
 
-            if(markIndex < 0 || markIndex >= tasks.size()){
-                throw new DornException("Task number" + (markIndex + 1) + "does not exist.");
+            if (markIndex < 0 || markIndex >= tasks.size()) {
+                throw new DornException("Task number " + (markIndex + 1) + " does not exist.");
             }
 
             tasks.get(markIndex).markDone();
@@ -186,27 +199,26 @@ public class CommandHandler {
         }
 
         //checking for the presence of the /by keyword
-        boolean hasByKeyword = false;
-        for(String part : parts){
-            if(part.equals("/by")) {
-                hasByKeyword = true;
-                break;
-            }
-        }
-
-        if(!hasByKeyword){
+        if (!Parser.contains(parts, "/by")) {
             throw new DornException("Please specify the deadline with /by");
         }
 
         String description = Parser.parseDescription(parts);
-        LocalDate endDate = Parser.endDate(parts);
 
         //checking for empty inputs
-        if(description.isEmpty()){
-            throw new DornException("The description of a deadline cannot be empty");
+        if (description.isEmpty()) {
+            throw new DornException("The description of a deadline cannot be empty.");
         }
-        if(endDate == null){
-            throw new DornException("The deadline date cannot be empty");
+
+        LocalDate endDate;
+        try {
+            endDate = Parser.endDate(parts);
+        } catch (DateTimeParseException e) {
+            throw new DornException("Invalid date format for /by. Please use YYYY-MM-DD (e.g., 2026-03-24).");
+        }
+
+        if (endDate == null) {
+            throw new DornException("The deadline date cannot be empty. Usage: deadline <description> /by YYYY-MM-DD");
         }
 
         //passed all the checks now add it to the deadlines
@@ -228,32 +240,40 @@ public class CommandHandler {
         }
 
         // Check if both /from and /to exist
-        boolean hasFromKeyword = false;
-        boolean hasToKeyword = false;
-
-        for (String part : parts) {
-            if (part.equals("/from")) hasFromKeyword = true;
-            if (part.equals("/to")) hasToKeyword = true;
-        }
-
-        if (!hasFromKeyword || !hasToKeyword) {
+        if (!Parser.contains(parts, "/from") || !Parser.contains(parts, "/to")) {
             throw new DornException("Please specify event duration with /from and /to.");
         }
 
         String description = Parser.parseDescription(parts);
-        LocalDate startDate = Parser.startDate(parts);
-        LocalDate endDate = Parser.endDate(parts);
 
         if (description.isEmpty()) {
             throw new DornException("The description of an event cannot be empty.");
         }
 
+        LocalDate startDate;
+        LocalDate endDate;
+        try {
+            startDate = Parser.startDate(parts);
+        } catch (DateTimeParseException e) {
+            throw new DornException("Invalid date format for /from. Please use YYYY-MM-DD (e.g., 2026-03-24).");
+        }
+
+        try {
+            endDate = Parser.endDate(parts);
+        } catch (DateTimeParseException e) {
+            throw new DornException("Invalid date format for /to. Please use YYYY-MM-DD (e.g., 2026-03-25).");
+        }
+
         if (startDate == null) {
-            throw new DornException("The event start date cannot be empty.");
+            throw new DornException("The event start date cannot be empty. Usage: event <description> /from YYYY-MM-DD /to YYYY-MM-DD");
         }
 
         if (endDate == null) {
-            throw new DornException("The event end date cannot be empty.");
+            throw new DornException("The event end date cannot be empty. Usage: event <description> /from YYYY-MM-DD /to YYYY-MM-DD");
+        }
+
+        if (startDate.isAfter(endDate)) {
+            throw new DornException("Event start date (" + startDate + ") cannot be after end date (" + endDate + ").");
         }
 
         tasks.add(new Events(description, startDate, endDate));

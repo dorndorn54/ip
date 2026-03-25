@@ -9,6 +9,59 @@ import java.time.LocalDate;
  */
 public class Parser {
 
+    // -------------------------------------------------------------------------
+    // Private helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns the index of the first occurrence of {@code token} in {@code parts},
+     * or {@code -1} if not found.
+     *
+     * @param parts the tokenized user input to search through
+     * @param token the delimiter token to look for (e.g. {@code "/by"})
+     * @return the index of {@code token}, or {@code -1} if absent
+     */
+    private static int indexOf(String[] parts, String token) {
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].equals(token)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns {@code true} if {@code token} appears anywhere in {@code parts}.
+     *
+     * @param parts the tokenized user input to search through
+     * @param token the delimiter token to check for
+     * @return {@code true} if the token is present, {@code false} otherwise
+     */
+    public static boolean contains(String[] parts, String token) {
+        return indexOf(parts, token) != -1;
+    }
+
+    /**
+     * Joins the tokens in {@code parts} between indices {@code fromExclusive}
+     * and {@code toExclusive} into a single trimmed string.
+     *
+     * @param parts         the tokenized user input
+     * @param fromExclusive the index before the first token to include
+     * @param toExclusive   the index after the last token to include
+     * @return the joined, trimmed string, or an empty string if the range is empty
+     */
+    private static String tokensBetween(String[] parts, int fromExclusive, int toExclusive) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = fromExclusive + 1; i < toExclusive; i++) {
+            sb.append(parts[i]).append(" ");
+        }
+        return sb.toString().trim();
+    }
+
+    // -------------------------------------------------------------------------
+    // Public parsing methods
+    // -------------------------------------------------------------------------
+
     /**
      * Extracts the task description from the tokenized input.
      * Reads tokens starting from index 1 until a delimiter keyword
@@ -17,16 +70,16 @@ public class Parser {
      * @param parts the tokenized user input, where {@code parts[0]} is the command
      * @return the trimmed description string, or an empty string if none is found
      */
-    public static String parseDescription(String[] parts){
-        //by the case return the required text the task wants
-        StringBuilder sb = new StringBuilder();
-        for(int i = 1; i < parts.length; i++){
-            if(parts[i].equals("/by") || parts[i].equals("/from") || parts[i].equals("/to")){
+    public static String parseDescription(String[] parts) {
+        // Find the first delimiter — description ends just before it
+        int delimiterIndex = parts.length;
+        for (int i = 1; i < parts.length; i++) {
+            if (parts[i].equals("/by") || parts[i].equals("/from") || parts[i].equals("/to")) {
+                delimiterIndex = i;
                 break;
             }
-            sb.append(parts[i]).append(" ");
         }
-        return sb.toString().trim();
+        return tokensBetween(parts, 0, delimiterIndex);
     }
 
     /**
@@ -38,29 +91,16 @@ public class Parser {
      * @return the parsed {@link LocalDate} start date, or {@code null} if
      *         {@code /from} or {@code /to} are absent or in the wrong order
      */
-    public static LocalDate startDate(String[] parts){
-        int fromIndex = -1;
-        int toIndex = -1;
+    public static LocalDate startDate(String[] parts) {
+        int fromIndex = indexOf(parts, "/from");
+        int toIndex = indexOf(parts, "/to");
 
-        for(int i = 0; i < parts.length; i++){
-            if(parts[i].equals("/from")){
-                fromIndex = i;
-            }
-            else if(parts[i].equals("/to")){
-                toIndex = i;
-            }
-        }
-
-        if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex) {
-            StringBuilder startDate = new StringBuilder();
-            for (int i = fromIndex + 1; i < toIndex; i++) {
-                startDate.append(parts[i]).append(" ");
-            }
-
-            return LocalDate.parse(startDate.toString().trim());
-        } else {
+        if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
             return null;
         }
+
+        String dateStr = tokensBetween(parts, fromIndex, toIndex);
+        return LocalDate.parse(dateStr);
     }
 
     /**
@@ -72,25 +112,17 @@ public class Parser {
      * @return the parsed {@link LocalDate} end date, or {@code null} if
      *         neither {@code /by} nor {@code /to} is found
      */
-    public static LocalDate endDate(String[] parts){
-
-        int fromIndex = -1;
-
-        for(int i = 0; i < parts.length; i++){
-            if(parts[i].equals("/by") || parts[i].equals("/to")){
-                fromIndex = i;
-                break;
-            }
+    public static LocalDate endDate(String[] parts) {
+        int delimiterIndex = indexOf(parts, "/by");
+        if (delimiterIndex == -1) {
+            delimiterIndex = indexOf(parts, "/to");
         }
 
-        if(fromIndex != -1){
-            StringBuilder endDate = new StringBuilder();
-            for(int i = fromIndex + 1; i < parts.length; i++){
-                endDate.append(parts[i]).append(" ");
-            }
-            return LocalDate.parse(endDate.toString().trim());
-        }else{
+        if (delimiterIndex == -1) {
             return null;
         }
+
+        String dateStr = tokensBetween(parts, delimiterIndex, parts.length);
+        return LocalDate.parse(dateStr);
     }
 }
