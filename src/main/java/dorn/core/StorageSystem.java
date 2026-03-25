@@ -26,7 +26,7 @@ public class StorageSystem {
 
     /**
      * Serializes the given list of tasks to a JSON file at {@value FILE_PATH}.
-     * Creates the {@code Data/} directory if it does not already exist.
+     * Creates the {@code Data/} directory if it does not already exist.    
      * Uses a custom {@link LocalDateAdapter} to handle {@link LocalDate} serialization.
      *
      * @param tasks the list of tasks to save
@@ -59,7 +59,10 @@ public class StorageSystem {
      * @return the loaded list of tasks, or an empty list if unavailable
      */
     public static ArrayList<Task> loadList(){
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .create();
         File file = new File(FILE_PATH);
 
         if(!file.exists()){

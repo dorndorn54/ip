@@ -2,16 +2,14 @@ package dorn.core;
 
 import dorn.tasks.Task;
 import dorn.parser.OutputHandler;
-import dorn.parser.CommandHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import static dorn.parser.CommandHandler.identifyCommand;
 
 public class Dorn {
-    public static void initalisation(){
+    public static void initialisation() {
         String logo = " ____   ___  ____  _   _ \n"
                 + "|  _ \\ / _ \\|  _ \\| \\ | |\n"
                 + "| | | | | | | |_) |  \\| |\n"
@@ -22,6 +20,8 @@ public class Dorn {
         System.out.println("Hello! I'm " + name +
                 "\nWhat can I do for you?" +
                 "\n\n" + logo + "\n");
+
+        OutputHandler.printHelp();
     }
     /**
      * Continuously reads user input from standard input and processes commands.
@@ -50,10 +50,10 @@ public class Dorn {
 
             try {
                 identifyCommand(parts, tasks);
-            } catch(DornException e){
+            } catch (DornException e) {
                 OutputHandler.printError(e.getMessage());
-            } catch(Exception e){
-                OutputHandler.printError(e.getMessage());
+            } catch (Exception e) {
+                OutputHandler.printError("An unexpected error occurred: " + e.getMessage());
             }
         }
     }
@@ -66,7 +66,7 @@ public class Dorn {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        initalisation();
+        initialisation();
         receiveInputAndPrint();
     }
 }
